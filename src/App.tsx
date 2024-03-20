@@ -5,16 +5,18 @@ import Home from "./routes/home";
 import Profile from "./routes/profile";
 import Login from "./routes/login";
 import CreateAccount from "./routes/create-account";
-import {createGlobalStyle} from "styled-components";
+import {createGlobalStyle, styled} from "styled-components";
 import reset from "styled-reset";
 import LoadingScreen from "./component/loading-screen";
+import { auth } from "./routes/firebase";
+import ProtectedRouter from "./component/protected-router";
 
 const router = createBrowserRouter([
   {
     path:"/",
-    element:<Layout/>,
+    element:<ProtectedRouter><Layout/></ProtectedRouter>,
     children:[
-      {
+      { 
         path:"",
         element:<Home/>
       },
@@ -46,19 +48,27 @@ font-family: 'system-ui', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
 }
 `;
 
+const Wrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+`;
+
 function App() {
   const [isLoading, setLoading] = useState(true);
   const init = async () => {
-    setTimeout(() => setLoading(false), 2000); 
+    await auth.authStateReady();
+    setLoading(false); 
   };
   useEffect (() => {
     init();
   }, []);
   return (
   <>
-    <GlobalStyles/>
-    {isLoading ?<LoadingScreen/> : <RouterProvider router={router}/>}
-    
+    <Wrapper>
+      <GlobalStyles/>
+      {isLoading ?<LoadingScreen/> : <RouterProvider router={router}/>}
+    </Wrapper>
   </>
   );
 }
