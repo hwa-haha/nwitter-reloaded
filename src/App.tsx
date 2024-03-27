@@ -8,7 +8,7 @@ import CreateAccount from "./routes/create-account";
 import {createGlobalStyle, styled} from "styled-components";
 import reset from "styled-reset";
 import LoadingScreen from "./component/loading-screen";
-import { auth } from "./routes/firebase";
+import { auth } from "./firebase";
 import ProtectedRouter from "./component/protected-router";
 
 const router = createBrowserRouter([
